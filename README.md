@@ -25,6 +25,7 @@ CS 198 Requirement for S.Y. 2018-2019
 - Clone repo: `git clone https://github.com/cadaroya/DRMblockchain`
 - Install truffle: `npm install -g truffle`
 - Ganache CLI: `npm install -g ethereumjs-testrpc`
+- Install dependencies: `npm install`
 
 ### Start Listening to ports
 
