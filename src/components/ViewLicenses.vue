@@ -28,12 +28,12 @@
                 </v-scroll-y-transition>
               </v-card>
             </v-item>
-          <v-btn color="success">Buy</v-btn>
+          <v-btn color="info">View</v-btn>
+          <v-btn color="success">Transfer</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
     </v-item-group>
-    <v-btn color="info" to="/registerProduct">Register Product</v-btn>
   </div>
 </template>
 
