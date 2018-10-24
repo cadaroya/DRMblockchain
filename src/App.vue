@@ -14,8 +14,10 @@ export default {
     PageHeader
   },
   mounted () {
-    console.log('registerWeb3 Action dispatched from casino-dapp.vue!!')
+    console.log('registerWeb3 Action dispatched from app.vue!!')
     this.$store.dispatch('registerWeb3')
+    console.log('dispatching getContractInstance')
+    this.$store.dispatch('getContractInstance')
   }
 }
 </script>
