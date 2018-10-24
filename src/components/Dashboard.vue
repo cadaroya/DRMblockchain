@@ -1,51 +1,41 @@
 <template>
   <div class="dashboard">
+    <products/>
+    <!--
+    <v-layout>
+      <v-flex>
+        <div class="white elevation-2">
+          <v-toolbar flat dense class="cyan" dark>
+            <v-toolbar-title> DRM Blockchain </v-toolbar-title>
+          </v-toolbar>
+        </div>
+      </v-flex>
+    </v-layout>
     <h1>{{ msg }}</h1>
-    <div v-if="userExists">
+     <div v-if="userExists">
       Welcome {{ pseudo }}. Destroy your account by clicking <a href="#" @click="destroyAccount">here</a>.
     </div>
-    <div v-else>Sign up <router-link to="/signup">here</router-link>.</div>
+    <div v-else>Sign up <router-link to="/signup">here</router-link>.</div>-->
   </div>
 </template>
 
 <script>
-import Users from '@/js/users'
+import Products from './Products'
 
 export default {
   name: 'dashboard',
+  components: {
+    Products
+  },
   data () {
     return {
-      msg: 'Welcome to your truffle-vue dApp',
-      pseudo: undefined
+      msg: 'Welcome to your truffle-vue dApp'
     }
   },
   computed: {
-    userExists: function () {
-      return (typeof this.pseudo !== 'undefined')
-    }
-  },
-  beforeCreate: function () {
-    Users.init().then(() => {
-      Users.exists(window.web3.eth.accounts[0]).then((exists) => {
-        if (exists) {
-          Users.authenticate().then(pseudo => {
-            this.pseudo = pseudo
-          })
-        }
-      })
-    }).catch(err => {
-      console.log(err)
-    })
   },
   methods: {
-    destroyAccount: function (e) {
-      e.preventDefault()
-      Users.destroy().then(() => {
-        this.pseudo = undefined
-      }).catch(err => {
-        console.log(err)
-      })
-    }
+
   }
 }
 </script>

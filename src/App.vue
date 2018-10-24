@@ -1,12 +1,17 @@
 <template>
   <div id="app">
+    <page-header />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import PageHeader from '@/components/Header.vue'
 export default {
   name: 'app',
+  components: {
+    PageHeader
+  },
   mounted () {
     console.log('registerWeb3 Action dispatched from casino-dapp.vue!!')
     this.$store.dispatch('registerWeb3')
