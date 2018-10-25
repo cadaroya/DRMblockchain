@@ -21,7 +21,7 @@ contract ProductManager {
     mapping (uint256 => address) public productIdToVendor;
 
 
-    event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval);
+    event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval, bool renewable);
     event ProductBought(uint256 productId, address buyer);
 
 
