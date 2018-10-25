@@ -85,6 +85,7 @@ contract ProductManager {
 
     
     function _buyProduct(uint256 _productId, address _buyer) {
+        require(availableAmountOf(_productId) > 0);
         Product product = products[_productId];
         product.supply--;
         product.available--;
