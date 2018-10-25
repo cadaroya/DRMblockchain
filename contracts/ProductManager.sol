@@ -84,8 +84,8 @@ contract ProductManager {
     
 
     
-    function _buyProduct(uint256 _productId, address _buyer) {
-        require(availableAmountOf(_productId) > 0);
+    function _buyProduct(uint256 _productId, address _buyer) internal {
+        require(availableAmountOf(_productId) > 0, "Not enough stock available");
         Product product = products[_productId];
         product.supply--;
         product.available--;

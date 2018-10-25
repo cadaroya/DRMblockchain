@@ -1,5 +1,7 @@
 pragma solidity ^0.4.15;
 
+import "./ProductManager.sol";
+
 contract LicenseManager is ProductManager {
         
     struct License {
