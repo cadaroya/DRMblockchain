@@ -21,12 +21,12 @@ contract ProductManager {
     mapping (uint256 => address) public productIdToVendor;
 
 
-    event ProductRegistered(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval);
-    
+    event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval);
+    event ProductBought(uint256 productId, address buyer);
 
 
     modifier onlyVendor(uint256 _id) {
-        require(msg.sender == productToVendor[_id], "Sender is not the vendor of this product");
+        require(msg.sender == productIdToVendor[_id], "Sender is not the vendor of this product");
         _;
     }
 
@@ -63,7 +63,7 @@ contract ProductManager {
         return (products[_productId].id == 0);
     } 
 
-    function _registerProduct(uint256 _id, uint256 _price, uint256 _available, 
+    function _createProduct(uint256 _id, uint256 _price, uint256 _available, 
             uint256 _supply, uint256 _sold, uint256 _interval, 
             bool _renewable) internal {
         require(_productDoesNotExist(_id), "Product does not exist");
@@ -72,10 +72,14 @@ contract ProductManager {
         products[_id] = product;
         productIdToVendor[_id] = msg.sender;
         vendorProductCount[msg.sender]++;
-        emit ProductRegistered(_id, _price, _available, _supply, _sold, _interval, _renewable);
+        emit ProductCreated(_id, _price, _available, _supply, _sold, _interval, _renewable);
     }
 
     
+    function registerProduct(uint256 _id, uint256 _price, uint256 _available, uint256 _initialSupply, uint256 _interval, bool _renewable) public {
+        require(_available <= _initialSupply);
+        _createProduct(_id, _price, _available, _initialSupply, 0, _interval, _renewable);
+    }
     
     
 
@@ -85,6 +89,7 @@ contract ProductManager {
         product.supply--;
         product.available--;
         product.sold++;
+        emit ProductBought(_productId, _buyer);
     }
     
 
