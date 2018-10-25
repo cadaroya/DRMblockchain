@@ -1,10 +1,28 @@
 <template>
-  <div class='metamask-info'>
-    <p>Metamask: {{ web3.isInjected }}</p>
-    <p>Network: {{ web3.networkId }}</p>
-    <p>Account: {{ web3.coinbase }}</p>
-    <p>Balance: {{ web3.balance }}</p>
-  </div>
+  <v-container grid-list-xl>
+    <v-layout v-bind="binding">
+      <v-flex>
+        <v-card dark color="primary">
+          <v-card-text>Metamask: {{ web3.isInjected }}</v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-card dark color="secondary">
+          <v-card-text>Network: {{ web3.networkId }}</v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-card dark color="accent">
+          <v-card-text>Account: {{ web3.coinbase }}</v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-card dark color="accent">
+          <v-card-text>Balance: {{ web3.balance }}</v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

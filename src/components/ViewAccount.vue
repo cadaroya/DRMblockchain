@@ -6,7 +6,7 @@
 import HelloMetamask from '@/components/hello-metamask'
 
 export default {
-  name: 'casino-dapp',
+  name: 'viewAccount',
   components: {
     'hello-metamask': HelloMetamask
   }

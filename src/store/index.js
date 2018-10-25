@@ -34,6 +34,7 @@ export const store = new Vuex.Store({
       getWeb3.then(result => {
         console.log('committing result to registerWeb3Instance mutation')
         commit('registerWeb3Instance', result)
+        state.userLoggedIn = true
       }).catch(e => {
         console.log('error in action registerWeb3', e)
       })

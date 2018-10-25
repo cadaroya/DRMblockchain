@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/components/Dashboard'
 import Signup from '@/components/Signup'
-import CasinoDapp from '@/components/casino-dapp'
+import ViewAccount from '@/components/ViewAccount'
+import RegisterProduct from '@/components/RegisterProduct'
+import SignIn from '@/components/SignIn'
+import ViewLicenses from '@/components/ViewLicenses'
 
 Vue.use(Router)
 
@@ -19,9 +22,24 @@ export default new Router({
       component: Signup
     },
     {
-      path: '/casino',
-      name: 'casino-dapp',
-      component: CasinoDapp
+      path: '/account',
+      name: 'viewAccount',
+      component: ViewAccount
+    },
+    {
+      path: '/registerProduct',
+      name: 'registerProduct',
+      component: RegisterProduct
+    },
+    {
+      path: '/signIn',
+      name: 'signIn',
+      component: SignIn
+    },
+    {
+      path: '/licenses',
+      name: 'viewLicenses',
+      component: ViewLicenses
     }
   ]
 })
