@@ -37,7 +37,7 @@ contract LicenseManager is ProductManager {
     function _createLicense(uint256 _productId, uint256 _attributes, uint256 _issuedTime, 
             uint256 _expirationTime, address _affiliate) internal {
 
-        License storage license = License(_productId, _attributes, now, _expirationTime, _affiliate);
+        License memory license = License(_productId, _attributes, now, _expirationTime, _affiliate);
         uint256 id = licenses.push(license) - 1;
     }
 

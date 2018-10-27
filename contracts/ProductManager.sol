@@ -1,6 +1,8 @@
 pragma solidity ^0.4.15;
 
-contract ProductManager {
+import "./Users.sol";
+
+contract ProductManager is Users {
     struct Product {
         uint256 id;
         uint256 price;
@@ -67,7 +69,7 @@ contract ProductManager {
             uint256 _supply, uint256 _sold, uint256 _interval, 
             bool _renewable) internal {
         require(_productDoesNotExist(_id), "Product does not exist");
-        Product storage product = Product(_id, _price, _available, _supply, _sold, _interval, _renewable);
+        Product memory product = Product(_id, _price, _available, _supply, _sold, _interval, _renewable);
         productIds.push(_id);
         products[_id] = product;
         productIdToVendor[_id] = msg.sender;
