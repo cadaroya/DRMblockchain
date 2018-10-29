@@ -10,6 +10,7 @@ contract LicenseManager is ProductManager {
         uint256 issuedTime;
         uint256 expirationTime;
         address affiliate;
+        string name;
     }
 
     
@@ -21,7 +22,8 @@ contract LicenseManager is ProductManager {
         uint256 attributes,
         uint256 issuedTime,
         uint256 expirationTime,
-        address affiliate
+        address affiliate,
+        string name
     );
     
 
@@ -45,9 +47,9 @@ contract LicenseManager is ProductManager {
             require(_noOfCycles != 0);
         }
         require(_productExists(_productId));
-        
+        string memory name = nameOf(_productId);
         uint256 expirationTime = (intervalOf(_productId) * _noOfCycles) ;
-        License memory license = License(_productId, _attributes, now, expirationTime, _affiliate);
+        License memory license = License(_productId, _attributes, now, expirationTime, _affiliate, name);
         uint256 id = licenses.push(license) - 1;
 
         emit LicenseIssued(
@@ -58,7 +60,8 @@ contract LicenseManager is ProductManager {
             _attributes,
             now,
             expirationTime,
-            _affiliate
+            _affiliate,
+            name
         );
         return id;
     }
