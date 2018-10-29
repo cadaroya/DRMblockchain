@@ -22,9 +22,10 @@ contract ProductManager is Users {
     mapping (uint256 => Product) public products;
     mapping (uint256 => address) public productIdToVendor;
 
+    mapping (address => mapping(uint256 => uint256)) public ownerToProductCount;
 
     event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval, bool renewable);
-    event ProductBought(uint256 productId, address buyer);
+    event ProductBought(uint256 productId, address vendor, address buyer);
 
 
     modifier onlyVendor(uint256 _id) {
@@ -56,7 +57,6 @@ contract ProductManager is Users {
         return products[_productId].renewable;
     }
 
-
     function _productExists(uint256 _productId) internal view returns (bool) {
         return (products[_productId].id != 0);
     } 
@@ -82,8 +82,6 @@ contract ProductManager is Users {
         require(_available <= _initialSupply);
         _createProduct(_id, _price, _available, _initialSupply, 0, _interval, _renewable);
     }
-    
-    
 
     
     function _buyProduct(uint256 _productId, address _buyer) internal {
@@ -92,7 +90,8 @@ contract ProductManager is Users {
         product.supply--;
         product.available--;
         product.sold++;
-        emit ProductBought(_productId, _buyer);
+        ownerToProductCount[_buyer][_productId]++;
+        emit ProductBought(_productId, productIdToVendor[_productId], _buyer);
     }
     
 
