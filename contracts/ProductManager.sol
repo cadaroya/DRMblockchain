@@ -85,7 +85,7 @@ contract ProductManager is Users {
     
     function registerProduct(uint256 _id, uint256 _price, uint256 _available, uint256 _initialSupply, uint256 _interval, string _name, bool _renewable) public {
         require(_available <= _initialSupply, "Supply should be greater than or equal to amount available");
-        _createProduct(_id, _price, _available, _initialSupply, _available, _interval, _name, _renewable);
+        _createProduct(_id, _price, _available, _initialSupply, 0, _interval, _name, _renewable);
     }
 
     
