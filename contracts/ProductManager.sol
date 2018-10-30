@@ -11,6 +11,7 @@ contract ProductManager is Users {
         uint256 sold;
         uint256 interval;
         string name;
+        string description;
         bool renewable;
     }
 
@@ -25,7 +26,7 @@ contract ProductManager is Users {
 
     mapping (address => mapping(uint256 => uint256)) public ownerToProductCount;
 
-    event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval, string name, bool renewable);
+    event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval, string name, string description, bool renewable);
     event ProductBought(uint256 productId, address vendor, address buyer);
 
 
@@ -38,7 +39,7 @@ contract ProductManager is Users {
         return products[_productId].price;
     }
 
-    function availableAmountOf(uint256 _productId) public view returns (uint256) {
+    function availableAmountOf(uint256 _productId) public view returns (uint256 available) {
         return products[_productId].available;
     }
 
@@ -58,6 +59,10 @@ contract ProductManager is Users {
         return products[_productId].name;
     }
 
+    function descriptionOf(uint256 _productId) public view returns (string) {
+        return products[_productId].description;
+    }
+
     function isRenewable(uint256 _productId) public view returns (bool) {
         return products[_productId].renewable;
     }
@@ -72,20 +77,30 @@ contract ProductManager is Users {
 
     function _createProduct(uint256 _id, uint256 _price, uint256 _available, 
             uint256 _supply, uint256 _sold, uint256 _interval, string _productName,
-            bool _renewable) internal {
+            string _description, bool _renewable) internal {
         require(_productDoesNotExist(_id), "Product does not exist");
-        Product memory product = Product(_id, _price, _available, _supply, _sold, _interval, _productName,_renewable);
+        Product memory product = Product({
+            id: _id,
+            price: _price,
+            available: _available, 
+            supply: _supply,
+            sold: _sold,
+            interval: _interval,
+            name: _productName,
+            description: _description,
+            renewable: _renewable
+        });
         productIds.push(_id);
         products[_id] = product;
         productIdToVendor[_id] = msg.sender;
         vendorProductCount[msg.sender]++;
-        emit ProductCreated(_id, _price, _available, _supply, _sold, _interval, _productName, _renewable);
+        emit ProductCreated(_id, _price, _available, _supply, _sold, _interval, _productName, _description, _renewable);
     }
 
     
-    function registerProduct(uint256 _id, uint256 _price, uint256 _available, uint256 _initialSupply, uint256 _interval, string _name, bool _renewable) public {
+    function registerProduct(uint256 _id, uint256 _price, uint256 _available, uint256 _initialSupply, uint256 _interval, string _name, string _description, bool _renewable) public {
         require(_available <= _initialSupply, "Supply should be greater than or equal to amount available");
-        _createProduct(_id, _price, _available, _initialSupply, 0, _interval, _name, _renewable);
+        _createProduct(_id, _price, _available, _initialSupply, 0, _interval, _name, _description, _renewable);
     }
 
     
