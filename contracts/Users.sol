@@ -18,13 +18,13 @@ contract Users {
 
   function create (bytes32 _pseudo) public {
     users[msg.sender] = _pseudo ;
-    UserCreated(msg.sender, _pseudo);
+    emit UserCreated(msg.sender, _pseudo);
   }
 
   function destroy () public {
     require(exists(msg.sender));
     delete users[msg.sender];
-    UserDestroyed(msg.sender);
+    emit UserDestroyed(msg.sender);
   }
 
   function get (address _address) public constant returns(bytes32 _pseudo) {

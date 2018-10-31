@@ -25,11 +25,21 @@ contract LicenseManager is ProductManager {
         address affiliate,
         string name
     );
-    
 
+    event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
+    event Approval(address indexed _owner, address indexed _approved, uint256 _tokenId);
+    
     License[] public licenses;
     mapping (uint256 => address) public licenseToOwner;
     mapping (address => uint256) public ownerLicenseCount;
+
+    mapping (uint => address) licenseTransferApprovals;
+
+    modifier onlyOwnerOf(uint256 _id) {
+        require(msg.sender == licenseToOwner[_id], "Sender is not the owner of this license");
+        _;
+    }
+
 
     function licenseNotExpired(uint256 _licenseId) public view returns (bool){
         return (licenses[_licenseId].expirationTime >= now || licenses[_licenseId].expirationTime == 0);
@@ -71,6 +81,36 @@ contract LicenseManager is ProductManager {
         uint256 licenseId = _createLicense(_productId, _attributes, _noOfCycles, _affiliate);
         licenseToOwner[licenseId] = msg.sender;
         ownerLicenseCount[msg.sender]++;
+    }
+
+    function balanceOf(address _owner) public view returns (uint256 _balance) {
+        return ownerLicenseCount[_owner];
+    }
+
+    function ownerOf(uint256 _tokenId) public view returns (address _owner) {
+        return licenseToOwner[_tokenId];
+    }
+
+    function _transfer(address _from, address _to, uint256 _tokenId) private {
+        ownerLicenseCount[_to]++;
+        ownerLicenseCount[msg.sender]--;
+        licenseToOwner[_tokenId] = _to;
+        emit Transfer(_from, _to, _tokenId);
+    }
+
+    function transfer(address _to, uint256 _tokenId) public onlyOwnerOf(_tokenId) {
+        _transfer(msg.sender, _to, _tokenId);
+    }
+
+    function approve(address _to, uint256 _tokenId) public onlyOwnerOf(_tokenId) {
+        licenseTransferApprovals[_tokenId] = _to;
+        emit Approval(msg.sender, _to, _tokenId);
+    }
+
+    function takeOwnership(uint256 _tokenId) public {
+        require(licenseTransferApprovals[_tokenId] == msg.sender);
+        address owner = ownerOf(_tokenId);
+        _transfer(owner, msg.sender, _tokenId);
     }
 
 }

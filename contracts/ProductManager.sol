@@ -114,7 +114,17 @@ contract ProductManager is Users {
         emit ProductBought(_productId, productIdToVendor[_productId], _buyer);
     }
     
-
+    function viewProduct(address _owner) external view returns (uint[]) {
+        uint[] memory result = new uint[](vendorProductCount[_owner]);
+        uint counter = 0;
+        for (uint i = 0; i < productIds.length; i++) {
+            if (productIdToVendor[i] == _owner) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+        return result;
+    }
 
   
 }
