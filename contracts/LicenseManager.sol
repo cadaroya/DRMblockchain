@@ -3,7 +3,18 @@ pragma solidity ^0.4.15;
 import "./ProductManager.sol";
 
 contract LicenseManager is ProductManager {
-        
+    
+    bool public test = false;
+
+    function testBool (bool _test) public payable {
+        test = _test;
+    }
+
+    function readBool () public view returns (bool) {
+        return test;
+    }
+
+
     struct License {
         uint256 productId;
         uint256 attributes;

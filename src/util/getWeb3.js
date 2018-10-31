@@ -13,10 +13,18 @@ let getWeb3 = new Promise(function (resolve, reject) {
   var web3js = window.web3
   if (typeof web3js !== 'undefined') {
     var web3 = new Web3(web3js.currentProvider)
-    resolve({
-      injectedWeb3: web3.isConnected(),
-      web3 () {
-        return web3
+    var metaRes = false
+    web3.eth.net.isListening((err, res) => {
+      if (!err) {
+        metaRes = res
+        resolve({
+          injectedWeb3: metaRes,
+          web3 () {
+            return web3
+          }
+        })
+      } else {
+        console.log(err)
       }
     })
   } else {
@@ -27,7 +35,7 @@ let getWeb3 = new Promise(function (resolve, reject) {
   .then(result => {
     return new Promise(function (resolve, reject) {
       // Retrieve network ID
-      result.web3().version.getNetwork((err, networkId) => {
+      result.web3().eth.net.getId((err, networkId) => {
         if (err) {
           // If we can't find a networkId keep result the same and reject the promise
           reject(new Error('Unable to retrieve network ID'))
