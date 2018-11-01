@@ -14,11 +14,12 @@ CS 198 Requirement for S.Y. 2018-2019
 
 ## Configuration Instructions
 
-### Install Node, Ganache GUI, Metamask
+### Install Node, Ganache GUI, Metamask, and Node-gyp
 
 - Node: https://nodejs.org/en/
 - Ganache: https://truffleframework.com/ganache
 - Metamask: https://metamask.io/
+- Node-gyp: https://github.com/nodejs/node-gyp (To allow web3 1.0 to be installed)
 
 ### Setup Dev folder
 
@@ -30,13 +31,17 @@ CS 198 Requirement for S.Y. 2018-2019
 ### Start Listening to ports
 
 - To run VueJS: `npm run start` in the project directory (port 8080)
-- To start fake blockchain for development: `testrpc` (default on 8545)
+- To start fake blockchain for development: run Ganache GUI on port 8545
 
-### Sync testrpc to Ganache GUI
+### Setting up Ganache GUI
 
-- Note the `port` and `mnemonic` when running the `testrpc` command.
-- Start Ganache GUI, then click settings (top-right)
-- Under SERVER tab, change `port` number accordingly.
-- Under ACCOUNTS AND KEYS, change `mnemonic` accordingly.
-- Press save and restart
+- Go to `settings` by pressing the top right gear
+- At `Accounts & Keys` set the mnemonic to `because swear fall artwork prosper harvest mixture birth width music hurry acquire`
+
+### Connecting web3 and contract deployed in Ganache (upon modification of a .sol file)
+- Open a powershell console in project directory then run `truffle migrate --reset`.
+- When contracts are generated, the contract addresses will be displayed in the console. Note the address for `LicenseManager`
+- Navigate to drmblockchain/src/util/getContract
+- In line 6, change the contract address that you noted in the earlier step
+
 
