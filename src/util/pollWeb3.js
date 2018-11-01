@@ -7,32 +7,41 @@ let pollWeb3 = function (state) {
 
   setInterval(() => {
     if (web3 && store.state.web3.web3Instance) {
-      if (web3.eth.coinbase !== store.state.web3.coinbase) {
-        let newCoinbase = web3.eth.coinbase
-        web3.eth.getBalance(web3.eth.coinbase, function (err, newBalance) {
-          if (err) {
-            console.log(err)
-          } else {
-            store.dispatch('pollWeb3', {
-              coinbase: newCoinbase,
-              balance: parseInt(newBalance, 10)
-            })
-          }
-        })
-      } else {
-        web3.eth.getBalance(store.state.web3.coinbase, (err, polledBalance) => {
-          if (err) {
-            console.log(err)
-          } else if (parseInt(polledBalance, 10) !== store.state.web3.balance) {
-            store.dispatch('pollWeb3', {
-              coinbase: store.state.web3.coinbase,
-              balance: polledBalance
-            })
-          }
-        })
-      }
+      var tempCoinbase
+      web3.eth.getCoinbase((err, res) => {
+        if (!err) {
+          tempCoinbase = res
+        } else {
+          console.log(err)
+        }
+      }).then(() => {
+        if (tempCoinbase !== store.state.web3.coinbase) {
+          let newCoinbase = tempCoinbase
+          web3.eth.getBalance(newCoinbase, function (err, newBalance) {
+            if (err) {
+              console.log(err)
+            } else {
+              store.dispatch('pollWeb3', {
+                coinbase: newCoinbase,
+                balance: parseInt(newBalance, 10)
+              })
+            }
+          })
+        } else {
+          web3.eth.getBalance(store.state.web3.coinbase, (err, polledBalance) => {
+            if (err) {
+              console.log(err)
+            } else if (parseInt(polledBalance, 10) !== store.state.web3.balance) {
+              store.dispatch('pollWeb3', {
+                coinbase: store.state.web3.coinbase,
+                balance: polledBalance
+              })
+            }
+          })
+        }
+      })
     }
-  }, 500)
+  }, 2000)
 }
 
 export default pollWeb3
