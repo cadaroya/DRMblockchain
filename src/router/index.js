@@ -6,6 +6,7 @@ import ViewAccount from '@/components/ViewAccount'
 import RegisterProduct from '@/components/RegisterProduct'
 import SignIn from '@/components/SignIn'
 import ViewLicenses from '@/components/ViewLicenses'
+import ViewProducts from '@/components/Products'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/licenses',
       name: 'viewLicenses',
       component: ViewLicenses
+    },
+    {
+      path: '/products',
+      name: 'viewProducts',
+      component: ViewProducts
     }
   ]
 })

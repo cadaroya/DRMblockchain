@@ -18,6 +18,9 @@
 <script>
 
 export default {
+  mounted: function () {
+    console.log('I also loaded twice. Sadly')
+  }
 }
 </script>
 

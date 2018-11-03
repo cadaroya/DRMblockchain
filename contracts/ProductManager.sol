@@ -35,6 +35,10 @@ contract ProductManager is Users {
         _;
     }
 
+    function getTotalProductCount() public view returns (uint){
+        return productIds.length;
+    }
+
     function priceOf(uint256 _productId) public view returns (uint256) {
         return products[_productId].price;
     }

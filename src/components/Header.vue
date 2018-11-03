@@ -11,7 +11,7 @@
         </v-list-tile>
         <v-divider></v-divider>
         <template v-for="(item, index) in items">
-          <v-list-tile :href="item.href" :to="item.href" :key="index">
+          <v-list-tile :to="item.href" :key="index">
             <v-list-tile-action>
               <v-icon light v-html="item.icon"></v-icon>
             </v-list-tile-action>
@@ -33,7 +33,6 @@
     </v-toolbar>
     <v-content>
       <v-fade-transition mode="out-in">
-        <router-view></router-view>
       </v-fade-transition>
     </v-content>
     <v-footer class="cyan" dark app>
@@ -49,7 +48,7 @@ export default {
     return {
       drawer: false,
       items: [{
-        href: '/',
+        href: 'products',
         router: true,
         title: 'Product Store',
         icon: 'home'

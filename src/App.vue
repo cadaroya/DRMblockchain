@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
-    <page-header />
     <router-view></router-view>
+    <page-header />
   </div>
 </template>
 

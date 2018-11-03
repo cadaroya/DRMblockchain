@@ -1,6 +1,5 @@
 <template>
   <v-container grid-list-xl>
-    <v-layout v-bind="binding">
       <v-flex>
         <v-card dark color="primary">
           <v-card-text>Metamask: {{ web3.isInjected }}</v-card-text>
@@ -21,7 +20,6 @@
           <v-card-text>Balance: {{ web3.balance }}</v-card-text>
         </v-card>
       </v-flex>
-    </v-layout>
   </v-container>
 </template>
 
