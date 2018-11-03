@@ -15,6 +15,7 @@ contract ProductManager is Users {
         bool renewable;
     }
 
+
     uint256[] public productIndex; 
 
 
@@ -37,7 +38,7 @@ contract ProductManager is Users {
     }
 
     function getTotalProductCount() public view returns (uint){
-        return productIds.length;
+        return productIndex.length;
     }
 
     function priceOf(uint256 _productId) public view returns (uint256) {
@@ -123,8 +124,8 @@ contract ProductManager is Users {
     function viewProduct(address _owner) external view returns (uint[]) {
         uint[] memory result = new uint[](vendorProductCount[_owner]);
         uint counter = 0;
-        for (uint i = 0; i < productIds.length; i++) {
-            if (productIdToVendor[i] == _owner) {
+        for (uint i = 0; i < productIndex.length; i++) {
+            if (productIdToVendor[productIndexToId[i]] == _owner) {
                 result[counter] = i;
                 counter++;
             }
@@ -133,10 +134,10 @@ contract ProductManager is Users {
     }
 
     function checkIfDuplicateProduct(uint256 _productId) public view returns (uint256 matchingId) {
-        string givenName = nameOf(_productId);
-        string givenDesc = descriptionOf(_productId);
-        string name;
-        string description;
+        string memory givenName = nameOf(_productId);
+        string memory givenDesc = descriptionOf(_productId);
+        string memory name;
+        string memory description;
         uint256 productId;
         uint256 i = 0;
         for(i = 0 ; i < productIndex.length ; ++i){
@@ -146,7 +147,7 @@ contract ProductManager is Users {
             }
             name = nameOf(productId);
             description = descriptionOf(productId);
-            if(givenName == name && givenDesc == description){
+            if(keccak256(givenName) == keccak256(name) && keccak256(givenDesc) == keccak256(description)){
                 return productId;
             }
         }
