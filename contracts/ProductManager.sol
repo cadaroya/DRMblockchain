@@ -15,13 +15,14 @@ contract ProductManager is Users {
         bool renewable;
     }
 
-    uint256[] public productIds; 
+    uint256[] public productIndex; 
 
 
     mapping (address => uint256) public vendorProductCount;
     
 
     mapping (uint256 => Product) public products;
+    mapping (uint256 => uint256) public productIndexToId;
     mapping (uint256 => address) public productIdToVendor;
 
     mapping (address => mapping(uint256 => uint256)) public ownerToProductCount;
@@ -94,8 +95,9 @@ contract ProductManager is Users {
             description: _description,
             renewable: _renewable
         });
-        productIds.push(_id);
+        uint256 index = productIndex.push(_id) - 1;
         products[_id] = product;
+        productIndexToId[index] = _id;
         productIdToVendor[_id] = msg.sender;
         vendorProductCount[msg.sender]++;
         emit ProductCreated(_id, _price, _available, _supply, _sold, _interval, _productName, _description, _renewable);
@@ -130,5 +132,19 @@ contract ProductManager is Users {
         return result;
     }
 
-  
+    function checkIfDuplicateProduct(string _name, string _description) public view returns (bool) {
+        string name;
+        string description;
+        uint256 productId;
+        uint256 i = 0;
+        for(i = 0 ; i < productIndex.length ; ++i){
+            productId = productIndexToId[i];
+            name = nameOf(productId);
+            description = descriptionOf(productId);
+            if(_name == name && _description == description){
+                return true;
+            }
+        }
+        return false;
+    }
 }
