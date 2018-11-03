@@ -132,19 +132,24 @@ contract ProductManager is Users {
         return result;
     }
 
-    function checkIfDuplicateProduct(string _name, string _description) public view returns (bool) {
+    function checkIfDuplicateProduct(uint256 _productId) public view returns (uint256 matchingId) {
+        string givenName = nameOf(_productId);
+        string givenDesc = descriptionOf(_productId);
         string name;
         string description;
         uint256 productId;
         uint256 i = 0;
         for(i = 0 ; i < productIndex.length ; ++i){
             productId = productIndexToId[i];
+            if(productId == _productId){
+                continue;
+            }
             name = nameOf(productId);
             description = descriptionOf(productId);
-            if(_name == name && _description == description){
-                return true;
+            if(givenName == name && givenDesc == description){
+                return productId;
             }
         }
-        return false;
+        return 0;
     }
 }
