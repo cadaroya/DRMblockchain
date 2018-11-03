@@ -87,7 +87,6 @@ export default {
       for (var i = 0; i < thisComponent.licenseLength; i++) {
         var licenseData = await thisComponent.$store.state.contractInstance().methods.licenses(i).call()
         thisComponent.licenses.push(licenseData)
-        console.log(thisComponent.licenses[i].name)
       }
       console.log(thisComponent.licenses)
     }, 1000)

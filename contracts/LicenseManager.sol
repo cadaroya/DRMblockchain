@@ -130,5 +130,17 @@ contract LicenseManager is ProductManager {
         _transfer(owner, msg.sender, _tokenId);
     }
 
+    function viewOwnerLicenses(address _owner) public view returns (uint[]) {
+        uint[] memory result = new uint[](ownerLicenseCount[_owner]);
+        uint counter = 0;
+        for(uint i = 0; i < licenses.length; i++){
+            if(licenseToOwner[i] == _owner) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+
+        return result;
+    }
 
 }
