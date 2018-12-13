@@ -77,13 +77,13 @@ export default {
       console.log('Product ID: ' + productId)
       var result = await this.$store.state.contractInstance().methods.purchaseLicense(productId, 1, 1, 1, '0x0A333624d64537C2fFd2bd4d1550328B066D9622').send({from: this.$store.state.web3.coinbase})
       console.log(result)
-    }/*,
+    },
     async verifyLicenseOwnership (productId) {
       console.log('I am here!')
       console.log('Product ID: ' + productId)
-      var result = this.$store.state.contractInstance().methods.verifyLicenseOwnership(this.$store.state.web3.coinbase, productId).send({from: this.$store.state.web3.coinbase})
+      var result = await this.$store.state.contractInstance().methods.verifyLicenseOwnership(this.$store.state.web3.coinbase, productId).call()
       console.log(result)
-    } */
+    }
   },
   mounted () {
     var thisComponent = this
