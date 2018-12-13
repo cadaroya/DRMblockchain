@@ -143,4 +143,15 @@ contract LicenseManager is ProductManager {
         return result;
     }
 
+    function verifyLicenseOwnership(address _user, uint256 _productId) public view returns (bool) {
+        uint[] memory userLicenses = viewOwnerLicenses(_user);
+        for (uint i = 0; i < userLicenses.length; i++) {
+            if (licenses[userLicenses[i]].productId == _productId) {
+                return true;
+            }
+        }
+
+        return false;
+    } 
+
 }
