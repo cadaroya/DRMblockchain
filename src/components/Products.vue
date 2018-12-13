@@ -32,6 +32,7 @@
               </v-card>
             </v-item>
           <v-btn color="success" @click="buyProduct(n.id)">Buy</v-btn>
+          <v-btn color="success" @click="verifyLicenseOwnership(n.id)">Verify</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -76,7 +77,13 @@ export default {
       console.log('Product ID: ' + productId)
       var result = await this.$store.state.contractInstance().methods.purchaseLicense(productId, 1, 1, 1, '0x0A333624d64537C2fFd2bd4d1550328B066D9622').send({from: this.$store.state.web3.coinbase})
       console.log(result)
-    }
+    }/*,
+    async verifyLicenseOwnership (productId) {
+      console.log('I am here!')
+      console.log('Product ID: ' + productId)
+      var result = this.$store.state.contractInstance().methods.verifyLicenseOwnership(this.$store.state.web3.coinbase, productId).send({from: this.$store.state.web3.coinbase})
+      console.log(result)
+    } */
   },
   mounted () {
     var thisComponent = this
