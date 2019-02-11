@@ -17,12 +17,13 @@ contract LicenseManager is ProductManager {
 
     struct License {
         uint256 productId;
-        uint256 licenseKey;
         uint256 attributes;
         uint256 issuedTime;
         uint256 expirationTime;
         address affiliate;
         string name;
+        bytes32 licenseHash;
+        bytes userSign;
     }
 
     
@@ -31,12 +32,13 @@ contract LicenseManager is ProductManager {
         address indexed buyer,
         uint256 licenseId,
         uint256 productId,
-        uint256 licenseKey,
         uint256 attributes,
         uint256 issuedTime,
         uint256 expirationTime,
         address affiliate,
-        string name
+        string name,
+        bytes32 licenseHash,
+        bytes userSign
     );
 
     event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
@@ -63,8 +65,8 @@ contract LicenseManager is ProductManager {
         return intervalOf(_productId) > 0;
     }
 
-    function _createLicense(uint256 _productId, uint256 _licenseKey, uint256 _attributes, 
-            uint256 _noOfCycles, address _affiliate) internal returns (uint256) {
+    function _createLicense(uint256 _productId, uint256 _attributes, 
+            uint256 _noOfCycles, address _affiliate, bytes32 _licenseHash, bytes _userSign) internal returns (uint256) {
         
         if(isSubscriptionProduct(_productId)) {
             require(_noOfCycles != 0);
@@ -72,7 +74,7 @@ contract LicenseManager is ProductManager {
         require(_productExists(_productId));
         string memory name = nameOf(_productId);
         uint256 expirationTime = (intervalOf(_productId) * _noOfCycles) ;
-        License memory license = License(_productId, _licenseKey, _attributes, now, expirationTime, _affiliate, name);
+        License memory license = License(_productId, _attributes, now, expirationTime, _affiliate, name, _licenseHash, _userSign);
         uint256 id = licenses.push(license) - 1;
 
         emit LicenseIssued(
@@ -80,22 +82,23 @@ contract LicenseManager is ProductManager {
             msg.sender,
             id,
             _productId,
-            _licenseKey,
             _attributes,
             now,
             expirationTime,
             _affiliate,
-            name
+            name,
+            _licenseHash,
+            _userSign
         );
         return id;
     }
 
-    function purchaseLicense(uint256 _productId, uint256 _licenseKey, uint256 _attributes, uint256 _noOfCycles, address _affiliate) public {
+    function purchaseLicense(uint256 _productId, uint256 _attributes, uint256 _noOfCycles, address _affiliate, bytes32 _licenseHash, bytes _userSign) public {
         _buyProduct(_productId, msg.sender);
 
         //tentative licensekey generation 
         //uint256 licenseKey = uint256(keccak256(uint256(msg.sender) ^ uint256(_affiliate) ^ _productId));
-        uint256 licenseId = _createLicense(_productId, _licenseKey, _attributes, _noOfCycles, _affiliate);
+        uint256 licenseId = _createLicense(_productId, _attributes, _noOfCycles, _affiliate, _licenseHash, _userSign);
         licenseToOwner[licenseId] = msg.sender;
         ownerLicenseCount[msg.sender]++;
     }
