@@ -37,7 +37,6 @@ contract LicenseManager is ProductManager {
         uint256 expirationTime,
         address affiliate,
         string name,
-        bytes32 licenseHash,
         bytes userSign
     );
 
@@ -87,7 +86,6 @@ contract LicenseManager is ProductManager {
             expirationTime,
             _affiliate,
             name,
-            _licenseHash,
             _userSign
         );
         return id;
