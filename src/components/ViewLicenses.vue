@@ -69,12 +69,6 @@ export default {
           console.log(error)
         }
       })
-    },
-    async buyProduct (productId) {
-      console.log('I am here!')
-      console.log('Product ID: ' + productId)
-      var result = await this.$store.state.contractInstance().methods.purchaseLicense(productId, 1, 1, '0x0A333624d64537C2fFd2bd4d1550328B066D9622').send({from: this.$store.state.web3.coinbase})
-      console.log(result)
     }
   },
   mounted () {

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-
+import Web3 from 'web3'
 export default {
   data () {
     return {
@@ -61,21 +61,17 @@ export default {
     }
   },
   methods: {
-    register () {
-      console.log('You have clicked the register product button!')
-      this.$store.state.contractInstance().methods.registerProduct(this.id, this.price, '100', '100', '10000', this.name, this.description, '1').send({
-        from: this.$store.state.web3.coinbase}, (error, result) => {
-        if (!error) {
-          console.log(result)
-        } else {
-          console.log(error)
-        }
-      })
-    },
     async buyProduct (productId) {
       console.log('I am here!')
       console.log('Product ID: ' + productId)
-      var result = await this.$store.state.contractInstance().methods.purchaseLicense(productId, 1, 1, 1, '0x0A333624d64537C2fFd2bd4d1550328B066D9622').send({from: this.$store.state.web3.coinbase})
+      let web3 = new Web3(window.web3.currentProvider)
+      // purchaseLicense(uint256 _productId, uint256 _attributes, uint256 _noOfCycles, address _affiliate, bytes32 _licenseHash, bytes _userSign)
+      // License Hash & Client Digisig
+      var licenseHash = web3.utils.sha3(this.products[productId].id + this.products[productId].description)
+      console.log(this.products[productId].description)
+      var userSign = await web3.eth.sign(licenseHash, this.$store.state.web3.coinbase)
+      console.log('Signature: ' + userSign)
+      var result = await this.$store.state.contractInstance().methods.purchaseLicense(this.products[productId].id, 1, 1, '0x0A333624d64537C2fFd2bd4d1550328B066D9622', licenseHash, userSign).send({from: this.$store.state.web3.coinbase})
       console.log(result)
     }/*,
     async verifyLicenseOwnership (productId) {
@@ -91,11 +87,11 @@ export default {
     setTimeout(async function () {
       thisComponent.productLength = await thisComponent.$store.state.contractInstance().methods.getTotalProductCount().call()
       var i = 1
-      for (i = 1; i <= thisComponent.productLength; i++) {
+      for (i = 0; i <= thisComponent.productLength; i++) {
         var result = await thisComponent.$store.state.contractInstance().methods.products(i).call()
         console.log(result)
         thisComponent.products.push(result)
-        console.log(thisComponent.products[0].description)
+        console.log(thisComponent.products[i].description)
       }
     }, 1000)
   }
