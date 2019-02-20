@@ -2,6 +2,7 @@ pragma solidity ^0.4.15;
 
 import "./ProductManager.sol";
 
+
 contract LicenseManager is ProductManager {
     
     bool public test = false;
@@ -104,7 +105,7 @@ contract LicenseManager is ProductManager {
         uint256 expirationTime = (intervalOf(_productId) * _noOfCycles) ;
         License memory license = License(_productId, _attributes, now, expirationTime, _affiliate, name, _licenseHash, _userSign);
         uint256 id = licenses.push(license) - 1;
-        licenseMapping[_id] = license;
+        licenseMapping[id] = license;
 
         emit LicenseIssued(
             productIdToVendor[_productId],
@@ -184,5 +185,14 @@ contract LicenseManager is ProductManager {
 
         return false;
     } 
+
+    function verifyLicense(uint256 _licenseId) public view returns (address) {
+        address signerAddress = ECRecovery.recover(licenseHashOf(_licenseId), userSignOf(_licenseId));
+        if(signerAddress == msg.sender) {
+            return msg.sender;
+        } else {
+            return 0;
+        }
+    }
 
 }

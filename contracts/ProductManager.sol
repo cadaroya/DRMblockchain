@@ -1,6 +1,7 @@
 pragma solidity ^0.4.15;
 
 import "./Users.sol";
+import "installed_contracts/zeppelin/contracts/ECRecovery.sol";
 
 contract ProductManager is Users {
     struct Product {
@@ -167,4 +168,14 @@ contract ProductManager is Users {
         }
         return 0;
     }
+
+    function verifyVendor(uint256 _productId) public view returns (address) {
+        address signerAddress = ECRecovery.recover(productHashOf(_productId), vendorSignOf(_productId));
+        if(signerAddress == productIdToVendor[_productId]) {
+            return productIdToVendor[_productId];
+        } else {
+            return 0;
+        }
+    }
+
 }
