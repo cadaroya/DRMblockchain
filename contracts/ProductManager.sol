@@ -75,7 +75,7 @@ contract ProductManager is Users {
         return products[_productId].renewable;
     }
 
-    function hashOf(uint256 _productId) public view returns (bytes32) {
+    function productHashOf(uint256 _productId) public view returns (bytes32) {
         return products[_productId].productHash;
     }
 

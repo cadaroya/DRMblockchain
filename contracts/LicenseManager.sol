@@ -44,6 +44,7 @@ contract LicenseManager is ProductManager {
     event Approval(address indexed _owner, address indexed _approved, uint256 _tokenId);
     
     License[] public licenses;
+    mapping (uint256 => License) licenseMapping;
     mapping (uint256 => address) public licenseToOwner;
     mapping (address => uint256) public ownerLicenseCount;
 
@@ -53,6 +54,34 @@ contract LicenseManager is ProductManager {
         require(msg.sender == licenseToOwner[_id], "Sender is not the owner of this license");
         _;
     }
+
+    function productIdOf(uint256 _licenseId) public view returns (uint256) {
+        return licenseMapping[_licenseId].productId;
+    } 
+
+    function attributesOf(uint256 _licenseId) public view returns (uint256) {
+        return licenseMapping[_licenseId].attributes;
+    } 
+
+    function issuedTimeOf(uint256 _licenseId) public view returns (uint256) {
+        return licenseMapping[_licenseId].issuedTime;
+    } 
+
+    function expirationTimeOf(uint256 _licenseId) public view returns (uint256) {
+        return licenseMapping[_licenseId].expirationTime;
+    } 
+
+    function affiliateOf(uint256 _licenseId) public view returns (address) {
+        return licenseMapping[_licenseId].affiliate;
+    } 
+
+    function licenseHashOf(uint256 _licenseId) public view returns (bytes32) {
+        return licenseMapping[_licenseId].licenseHash;
+    } 
+
+    function userSignOf(uint256 _licenseId) public view returns (bytes) {
+        return licenseMapping[_licenseId].userSign;
+    } 
 
 
     function licenseNotExpired(uint256 _licenseId) public view returns (bool){
@@ -75,6 +104,7 @@ contract LicenseManager is ProductManager {
         uint256 expirationTime = (intervalOf(_productId) * _noOfCycles) ;
         License memory license = License(_productId, _attributes, now, expirationTime, _affiliate, name, _licenseHash, _userSign);
         uint256 id = licenses.push(license) - 1;
+        licenseMapping[_id] = license;
 
         emit LicenseIssued(
             productIdToVendor[_productId],
