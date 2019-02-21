@@ -123,6 +123,7 @@ contract LicenseManager is ProductManager {
     }
 
     function purchaseLicense(uint256 _productId, uint256 _attributes, uint256 _noOfCycles, address _affiliate, bytes32 _licenseHash, bytes _userSign) public {
+        require(verifyVendor(_productId), "Invalid vendor");
         _buyProduct(_productId, msg.sender);
 
         //tentative licensekey generation 
