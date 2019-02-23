@@ -169,7 +169,7 @@ contract ProductManager is Users {
         return 0;
     }
 
-    function verifyVendor(uint256 _productId) internal view returns (boolean) {
+    function verifyVendor(uint256 _productId) internal view returns (bool) {
         address signerAddress = ECRecovery.recover(productHashOf(_productId), vendorSignOf(_productId));
         if(signerAddress == productIdToVendor[_productId]) {
             return true;

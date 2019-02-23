@@ -180,7 +180,7 @@ contract LicenseManager is ProductManager {
         uint[] memory userLicenses = viewOwnerLicenses(_user);
         for (uint i = 0; i < userLicenses.length; i++) {
             if (licenses[userLicenses[i]].productId == _productId) {
-                return true;
+                return (verifyLicense(userLicenses[i]) == _user);
             }
         }
 
@@ -189,8 +189,8 @@ contract LicenseManager is ProductManager {
 
     function verifyLicense(uint256 _licenseId) public view returns (address) {
         address signerAddress = ECRecovery.recover(licenseHashOf(_licenseId), userSignOf(_licenseId));
-        if(signerAddress == msg.sender) {
-            return msg.sender;
+        if(signerAddress == licenseToOwner[_licenseId] && signerAddress == msg.sender) {
+            return signerAddress;
         } else {
             return 0;
         }
