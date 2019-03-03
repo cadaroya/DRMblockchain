@@ -22,5 +22,13 @@ module.exports = {
         enabled: true,
         runs: 200
     }
-}
+  },
+  mocha: {
+    reporter: 'eth-gas-reporter',
+    reporterOptions : {
+      currency: 'CHF',
+      gasPrice: 21,
+      onlyCalledMethods: false,
+    }
+  }
 };

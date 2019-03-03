@@ -6,7 +6,7 @@ let getContract = new Promise(function (resolve, reject) {
   // '0x582e81be13caffc69753108296be075c6059c425' LOCAL GANACHE
   // '0x86feedcd197beb00f3fb3dcdeaee580f7e847b5d' new local ganache
   // '0xd73b1df53f329c7f50c2550a7cd40cbf61ae8c53' ROPSTEN ONLINE
-  let licenseContractInstance = new web3.eth.Contract(JSONInterface.abi, '0x86feedcd197beb00f3fb3dcdeaee580f7e847b5d')
+  let licenseContractInstance = new web3.eth.Contract(JSONInterface.abi, '0x9d1939f527f4988399bd633e2b07adbb1029a7b8')
   licenseContractInstance.methods.test().call((err, res) => {
     if (!err) {
       console.log(res)

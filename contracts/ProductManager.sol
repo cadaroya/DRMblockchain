@@ -33,6 +33,7 @@ contract ProductManager is Users {
 
     event ProductCreated(uint256 productId, uint256 price, uint256 available, uint256 supply, uint256 sold, uint256 interval, string name, string description, bool renewable, bytes32 productHash, bytes vendorSign);
     event ProductBought(uint256 productId, address vendor, address buyer);
+    event TestSignatures(address addressInside, address addressOutside, bytes signature);
 
 
     modifier onlyVendor(uint256 _id) {
@@ -137,7 +138,7 @@ contract ProductManager is Users {
     }
     
     function viewProduct(address _owner) external view returns (uint[]) {
-        uint[] memory result = new uint[](vendorProductCount[_owner]);
+        uint[] memory result = new uint[](productIndex.length);
         uint counter = 0;
         for (uint i = 0; i < productIndex.length; i++) {
             if (productIdToVendor[productIndexToId[i]] == _owner) {
@@ -170,10 +171,15 @@ contract ProductManager is Users {
     }
 
     function verifyVendor(uint256 _productId) internal view returns (bool) {
-        address signerAddress = ECRecovery.recover(productHashOf(_productId), vendorSignOf(_productId));
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 prefixedHash = keccak256(prefix, productHashOf(_productId));
+        address signerAddress = ECRecovery.recover(prefixedHash, vendorSignOf(_productId));
+        //address signerAddress = ECRecovery.recover(productHashOf(_productId), vendorSignOf(_productId));
         if(signerAddress == productIdToVendor[_productId]) {
+            emit TestSignatures(productIdToVendor[_productId], signerAddress, vendorSignOf(_productId));
             return true;
         } else {
+            emit TestSignatures(productIdToVendor[_productId], signerAddress, vendorSignOf(_productId));
             return false;
         }
     }
