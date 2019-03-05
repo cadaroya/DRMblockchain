@@ -41,7 +41,7 @@ contract('LicenseManager', async accounts => {
             web3.eth.defaultAccount = accounts[i];
             hashedMessage = await web3.utils.soliditySha3("HashThisString" + i.toString());
             consumerSign = await web3.eth.sign(hashedMessage, accounts[i]);
-            await instance.purchaseLicense(productId, 1, 1, accounts[0], hashedMessage, consumerSign);
+            await instance.purchaseLicense(productId, 1, 1, accounts[0], hashedMessage, consumerSign, {from: accounts[i]});
         }
 
         web3.eth.defaultAccount = accounts[0];

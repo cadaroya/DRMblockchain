@@ -3,8 +3,8 @@ const Web3 = require('web3');
 const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 
-var nUsers = 2;
-var nTxns = 1;
+var nUsers = 10;
+var nTxns = 2;
 contract('LicenseManager', async accounts => {
     let instance = null;
 
@@ -16,8 +16,9 @@ contract('LicenseManager', async accounts => {
 
         console.log(nTxns);
 
-        async function doRegisterTransaction(productName, productDescription, count,i){
-            web3.eth.defaultAccount = accounts[i];
+        async function doRegisterTransaction(count,i){
+            var productName = 'TestProduct' + count.toString();
+            var productDescription = 'TestDescription' + count.toString();
             messageHash = await web3.utils.soliditySha3(productName);
             messageSign = await web3.eth.sign(messageHash, accounts[i]);
             console.log("This signature is from ACCOUNT#" + i);
@@ -37,10 +38,16 @@ contract('LicenseManager', async accounts => {
         var count = 1;
 
         for(var i = 0; i < nUsers; i++){
+            // web3.eth.defaultAccount = accounts[i];
             for(var j = 0; j < nTxns; j++){
+                //promises[count-1]  = doRegisterTransaction(count,i);
                 var productName = 'TestProduct' + count.toString();
                 var productDescription = 'TestDescription' + count.toString();
-                promises[count-1]  = doRegisterTransaction(productName, productDescription, count,i);
+                messageHash = await web3.utils.soliditySha3(productName);
+                messageSign = await web3.eth.sign(messageHash, accounts[i]);
+                console.log("This signature is from ACCOUNT#" + i);
+                console.log(messageSign);
+                await instance.registerProduct(count, '50', '1000', '1000', '10000', productName, productDescription, '1', messageHash, messageSign, {from: accounts[i]});
                 count = count + 1;
             }
         }
@@ -65,13 +72,13 @@ contract('LicenseManager', async accounts => {
 
         var promises = new Array(nUsers * nTxns);
         var count = 1;
-
-        for(var i = 1; i < nUsers; i++){
+        
+        for(var i = 0; i < nUsers; i++){
             var affiliate = accounts[(i+1)%nUsers];
             console.log("STARTING!!! step " + i);
             for(var j = 1; j <= nTxns; j++){
                 var productId = ((i+1)*nTxns)%(nUsers*nTxns)+j;
-                console.log(await doPurchaseTransaction(productId, affiliate, count,i));
+                await doPurchaseTransaction(productId, affiliate, count,i);
                 //promises[count-1] =  doPurchaseTransaction(productId, affiliate, count,i);
                 count = count + 1; 
             }
