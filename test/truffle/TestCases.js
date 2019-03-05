@@ -1,12 +1,8 @@
 var LicenseManager = artifacts.require("./contracts/LicenseManager.sol");
 const Web3 = require('web3');
-
 const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-contract('LicenseManager', async accounts => {
 
-    console.log(accounts[0])
-    var messageHash = 0x0a28eed6ef325a434df60c5fb7d8dce9b99eb146c2b200251440e3b8b737d684;
-    var messageSign = 0xf0f2126e177bbe1ff49b7eb1313973bcb39e5fbedb4bdc64a331d5663fc5cd97480329c4f1c153cbd8ad480e52b79d910c032f8644f04e7b56b06f0c0b08282c1c;
+contract('LicenseManager', async accounts => {
     let instance = null;
 
     beforeEach(async () => {
@@ -47,6 +43,11 @@ contract('LicenseManager', async accounts => {
             consumerSign = await web3.eth.sign(hashedMessage, accounts[i]);
             await instance.purchaseLicense(productId, 1, 1, accounts[0], hashedMessage, consumerSign);
         }
+
+        web3.eth.defaultAccount = accounts[0];
+        hashedMessage = await web3.utils.soliditySha3("HashThisString0");
+        consumerSign = await web3.eth.sign(hashedMessage, accounts[0]);
+        await instance.purchaseLicense(productId, 1, 1, accounts[0], hashedMessage, consumerSign);
     });
 
     it("users should be able to transfer licenses to other users", async () => {
