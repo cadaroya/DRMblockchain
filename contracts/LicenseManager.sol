@@ -188,10 +188,15 @@ contract LicenseManager is ProductManager {
     } 
 
     function verifyLicense(uint256 _licenseId) public view returns (address) {
-        address signerAddress = ECRecovery.recover(licenseHashOf(_licenseId), userSignOf(_licenseId));
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 prefixedHash = keccak256(prefix, licenseHashOf(_licenseId));
+        address signerAddress = ECRecovery.recover(prefixedHash, userSignOf(_licenseId));
+        // address signerAddress = ECRecovery.recover(licenseHashOf(_licenseId), userSignOf(_licenseId));
         if(signerAddress == licenseToOwner[_licenseId] && signerAddress == msg.sender) {
+            emit TestSignatures(licenseToOwner[_licenseId], signerAddress, userSignOf(_licenseId));
             return signerAddress;
         } else {
+            emit TestSignatures(licenseToOwner[_licenseId], signerAddress, userSignOf(_licenseId));
             return 0;
         }
     }
