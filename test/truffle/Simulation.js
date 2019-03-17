@@ -13,7 +13,7 @@ contract('LicenseManager', async accounts => {
     });
 
     it("Should simulataneously register products", async () => {
-
+        console.time("AllRegister");
         console.log(nTxns);
 
         async function doRegisterTransaction(count,i){
@@ -41,6 +41,7 @@ contract('LicenseManager', async accounts => {
             // web3.eth.defaultAccount = accounts[i];
             for(var j = 0; j < nTxns; j++){
                 //promises[count-1]  = doRegisterTransaction(count,i);
+                console.time("User["+ i + "]Register[" + j +"]");
                 var productName = 'TestProduct' + count.toString();
                 var productDescription = 'TestDescription' + count.toString();
                 messageHash = await web3.utils.soliditySha3(productName);
@@ -49,6 +50,7 @@ contract('LicenseManager', async accounts => {
                 console.log(messageSign);
                 await instance.registerProduct(count, '50', '1000', '1000', '10000', productName, productDescription, '1', messageHash, messageSign, {from: accounts[i]});
                 count = count + 1;
+                console.timeEnd("User["+ i + "]Register[" + j +"]");
             }
         }
 
@@ -57,10 +59,12 @@ contract('LicenseManager', async accounts => {
         console.log("FIRST Promises count: " + (count-1));
         var txnList = await Promise.all(promises);
         console.log("Done");
+        console.timeEnd("AllRegister");
     });
 
     
     it("should simultaneously purchase licenses", async ()=>{
+        console.time("AllPurchase");
         async function doPurchaseTransaction(productId, affiliate, count,i){
             web3.eth.defaultAccount = accounts[i];
             var hashedMessage = await web3.utils.soliditySha3("HashThisString" + count.toString());
@@ -78,9 +82,11 @@ contract('LicenseManager', async accounts => {
             console.log("STARTING!!! step " + i);
             for(var j = 1; j <= nTxns; j++){
                 var productId = ((i+1)*nTxns)%(nUsers*nTxns)+j;
+                console.time("User["+ i + "]Purchase[" + j +"]");
                 await doPurchaseTransaction(productId, affiliate, count,i);
                 //promises[count-1] =  doPurchaseTransaction(productId, affiliate, count,i);
                 count = count + 1; 
+                console.timeEnd("User["+ i + "]Purchase[" + j +"]");
             }
             console.log("Account #"+i + "has AFFILIATE: Account #" + ((i+1)%nUsers));
             console.log("& Will purchase From product " + (((i+1)*nTxns)%(nUsers*nTxns)+1) + "to " + (((i+1)*nTxns)%(nUsers*nTxns)+nTxns));
@@ -90,6 +96,7 @@ contract('LicenseManager', async accounts => {
         //var txnList = await Promise.all(promises);
         //console.log(txnList)
         console.log("Done");
+        console.timeEnd("AllPurchase");
 
     })
 
@@ -97,14 +104,17 @@ contract('LicenseManager', async accounts => {
     it("users should be able to verify licenses", async () => {
         var productId = 1;
         var result;
-
+        console.time("AllVerify");
         for(var i = 0; i < nUsers; i++){
             for(var j = 1; j <= nTxns; j++){
                 var productId = ((i+1)*nTxns)%(nUsers*nTxns)+j;
+                console.time("User["+ i + "]Verify[" + j +"]");
                 result = await instance.verifyLicenseOwnership(accounts[i], productId, {from: accounts[i]});
+                console.timeEnd("User["+ i + "]Verify[" + j +"]");
                 // console.log(result);
             }
         }
+        console.timeEnd("AllVerify");
 
 
         
@@ -116,18 +126,23 @@ contract('LicenseManager', async accounts => {
         // too complicated, and unrealistic. SO. lets just transfer everything an account owns to account 0
 
 
-
+        console.time("AllTransfer");
         for(var i = 0; i < nUsers; i++){
+            console.time("User["+ i + "]View");
             result = await instance.viewOwnerLicenses(accounts[i]);
+            console.timeEnd("User["+ i + "]View");
             var length = result.length;
             
             for(var j = 0; j < length; j++){
                 var licenseId = result[j]["c"][0];
+                console.time("User["+ i + "]Transfer[" + j +"]");
                 await instance.transfer(accounts[0], licenseId, {from: accounts[i]});
+                console.timeEnd("User["+ i + "]Transfer[" + j +"]");
             }
 
         }
         console.log(instance.address);
+        console.timeEnd("AllTransfer");
 
     });
     
