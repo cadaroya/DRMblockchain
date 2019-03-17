@@ -12,6 +12,7 @@ contract('LicenseManager', async accounts => {
     
     it("should register product", async () => {
         web3.eth.defaultAccount = accounts[0]
+        console.time("should register product");
         for(var i = 1; i <= 10; i++){
             var productName = 'TestProduct' + i.toString();
             var productDescription = 'TestDescription' + i.toString();
@@ -32,9 +33,11 @@ contract('LicenseManager', async accounts => {
         }
 
         assert.equal(true,testChecker, "A Product FAILED to be created")
+        console.timeEnd("should register product");
     });
 
     it("users should be able to buy products", async () => {
+        console.time("should buy products");
         var productId = 1;
         // Purchase TestProduct1 created by accounts[0] 10 times, 1 for each user (accounts[1] to accounts[9])
         for(var i = 1; i < 2; i++){
@@ -51,21 +54,24 @@ contract('LicenseManager', async accounts => {
         consumerSign = await web3.eth.sign(hashedMessage, accounts[0]);
         console.log("Account# " + 0 + " LicenseSig: " + consumerSign);
         await instance.purchaseLicense(productId, 1, 1, accounts[0], hashedMessage, consumerSign);
+        console.timeEnd("should buy products");
     });
 
     it("users should be able to verify licenses", async () => {
+        console.time("should verify licenses");
         var productId = 1;
         var result;
         for(var i = 0; i < 2; i++){
             result = await instance.verifyLicenseOwnership(accounts[i], productId, {from: accounts[i]});
             console.log(result);
         }
+        console.timeEnd("should verify licenses");
 
         
     });
 
     it("users should be able to transfer licenses to other users", async () => {
-
+        console.time("should transfer licenses");
         var productId = 1;
         var result;
         console.log("Account0: " + await instance.ownerLicenseCount("0x74D6691a130984d74ee6342ACFcF192cb0218339"));
@@ -83,7 +89,7 @@ contract('LicenseManager', async accounts => {
         console.log(await instance.licenseToOwner(0));
         console.log(await instance.licenseToOwner(1));
         console.log(await instance.licenseToOwner(2));
-        
+        console.timeEnd("should transfer licenses");
     });
 
 
