@@ -146,5 +146,22 @@ contract('LicenseManager', async accounts => {
 
     });
     
+    it("count size", async () => {
+        async function countTotalBlockchainSize() {
+            var blocks = await web3.eth.getBlockNumber();
+            console.log(blocks + " blocks:")
+            var blocksum = 0;
+            for(var i = 0; i < blocks; i++){
+                var block = await web3.eth.getBlock(i);
+                console.log("\tBlock[" + i + "]\n\t\tHash: " + block.hash + "\n\t\tGas used: " + block.gasUsed + "\n\t\tSize: " + block.size);
+                blocksum += block.size;
+            }
+            console.log("==========================");
+            console.log(blocksum + " bytes");
+        }
+        
+        await countTotalBlockchainSize();
+    })
 
 });
+
