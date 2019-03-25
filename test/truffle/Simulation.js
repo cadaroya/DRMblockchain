@@ -151,13 +151,18 @@ contract('LicenseManager', async accounts => {
             var blocks = await web3.eth.getBlockNumber();
             console.log(blocks + " blocks:")
             var blocksum = 0;
+            var gassum = 0;
+            //var i = blocks;
             for(var i = 0; i < blocks; i++){
                 var block = await web3.eth.getBlock(i);
                 console.log("\tBlock[" + i + "]\n\t\tHash: " + block.hash + "\n\t\tGas used: " + block.gasUsed + "\n\t\tSize: " + block.size);
                 blocksum += block.size;
+                gassum += block.gasUsed;
             }
             console.log("==========================");
             console.log(blocksum + " bytes");
+            console.log("Total gas cost: " + gassum);
+            console.log("Average gas cost: " + gassum/blocks);
         }
         
         await countTotalBlockchainSize();
